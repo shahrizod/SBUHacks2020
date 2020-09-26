@@ -117,7 +117,7 @@ class Ui_MainWindow(object):
         ui = Ui_Dialog()
         ui.setupUi(Dialog)
         ui.inputChoice(Dialog, 2, "Lick My Balls")
-        ui.display()
+        #ui.display()
         Dialog.show()
         Dialog.exec_()
 

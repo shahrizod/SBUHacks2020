@@ -7,11 +7,10 @@ import random
 import pandas as pd
 
 df = convertArray("https://quizlet.com/2595436/stony-brook-university-flash-cards/")
-randomNums = []
+
 for x in range(4):
-    randomNums.append(random.randint(0,len(df['Terms'])-1))
-
-
+    randomNumber = random.randint(0,len(df['Terms'])-1)
+    print(df["Terms"][randomNumber],df["Definitions"][randomNumber])
 
 if __name__ == "__main__":
     import sys
