@@ -9,8 +9,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from QuestionDial import Ui_Dialog
 import time
+import sys
 
 class Ui_MainWindow(object):
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(450, 588)
@@ -115,12 +117,12 @@ class Ui_MainWindow(object):
         ui = Ui_Dialog()
         ui.setupUi(Dialog)
         ui.inputChoice(Dialog, 2, "Lick My Balls")
+        ui.display()
         Dialog.show()
         Dialog.exec_()
 
 
 if __name__ == "__main__":
-    import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

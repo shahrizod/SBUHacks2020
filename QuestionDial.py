@@ -5,13 +5,18 @@
 # Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(769, 550)
+        Dialog.setWindowFlags(
+            QtCore.Qt.Window |
+            QtCore.Qt.CustomizeWindowHint |
+            QtCore.Qt.WindowStaysOnTopHint |
+            QtCore.Qt.FramelessWindowHint
+        )
         self.choice2 = QtWidgets.QCheckBox(Dialog)
         self.choice2.setGeometry(QtCore.QRect(80, 290, 131, 31))
         font = QtGui.QFont()
