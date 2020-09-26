@@ -10,7 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 #from QuestionDial import Ui_Dialog
 import time
 import sys
-
+import os
 import random
 from scraper import convertArray
 
