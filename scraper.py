@@ -30,3 +30,4 @@ df = pd.DataFrame(data, columns=['Terms', 'Definitions'])
 print(df)
 
 df.to_csv('quizlet.csv', index=False)
+print("Success")
