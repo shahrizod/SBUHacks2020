@@ -7,7 +7,7 @@ import pandas as pd
 options = webdriver.ChromeOptions()
 #options.add_argument('headless')
 driver = webdriver.Chrome(options=options)
-url = "https://quizlet.com/130934620/print"
+url = "https://quizlet.com/2595436/print"
 driver.get(url)
 WebDriverWait(driver, 10).until(lambda x: x.find_element_by_class_name('PrintPageOptions-radioWrap'))
 driver.find_element_by_xpath('/html/body/div[3]/main/div/div/div/div[3]/div[1]/div/div[2]/div[2]/div[4]/label/input').click()
@@ -28,3 +28,5 @@ for definition in secondCol:
 data = {'Terms':terms,'Definitions':definitions}
 df = pd.DataFrame(data, columns=['Terms', 'Definitions'])
 print(df)
+
+df.to_csv('quizlet.csv', index=False)
