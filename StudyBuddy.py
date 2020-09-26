@@ -15,10 +15,17 @@ import random
 from scraper import convertArray
 
 global quizlet_reader
+global numQuestions
+global numQsDone
+numQsDone = 0
 
 def arrayconverter(scrapeUrl):
     global quizlet_reader
     quizlet_reader = convertArray(scrapeUrl)
+
+def numQs(numq):
+    global numQuestions
+    numQuestions = numq
 
 def createProblem():
     global quizlet_reader
@@ -38,10 +45,11 @@ def createProblem():
     choice3 = choice3[:-2]
 
     List = [[question], [answer, choice1, choice2, choice3]]
+    print(List)
     return List
 
 class Ui_MainWindow(object):
-
+    global List
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(450, 600)
@@ -142,6 +150,8 @@ class Ui_MainWindow(object):
     
     def study(self):
         arrayconverter(self.lineEdit.text())
+        numQs(self.NumberQuestions.value())
+        global List
         List = createProblem()
         choices = List[1]
         random.shuffle(choices)
@@ -151,13 +161,15 @@ class Ui_MainWindow(object):
         qUi.inputChoice(Dialog, 3, choices[2])
         qUi.inputChoice(Dialog, 4, choices[3])
         qUi.inputChoice(Dialog, 5, List[0][0])
+        
         Dialog.show()
         Dialog.exec_()
 
 class Ui_Dialog(object):
+    global List
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(1920, 1080)
+        Dialog.resize(1920, 800)
         Dialog.setWindowFlags(
             QtCore.Qt.Window |
             QtCore.Qt.CustomizeWindowHint |
@@ -178,13 +190,6 @@ class Ui_Dialog(object):
         font.setPointSize(14)
         self.choice4.setFont(font)
         self.choice4.setObjectName("choice4")
-        self.Instructions = QtWidgets.QLabel(Dialog)
-        self.Instructions.setGeometry(QtCore.QRect(30, 130, 181, 51))
-        font = QtGui.QFont()
-        font.setFamily("Cambria")
-        font.setPointSize(11)
-        self.Instructions.setFont(font)
-        self.Instructions.setObjectName("Instructions")
         self.choice1 = QtWidgets.QCheckBox(Dialog)
         self.choice1.setGeometry(QtCore.QRect(80, 210, 131, 31))
         font = QtGui.QFont()
@@ -219,34 +224,48 @@ class Ui_Dialog(object):
     def checkClick(self, Dialog, choice):
         if choice == 1:
             chosen = self.choice1.text()
-            self.choice1.setChecked(False)
         if choice == 2:
             chosen = self.choice2.text()
-            self.choice2.setChecked(False)
         if choice == 3:
             chosen = self.choice3.text()
-            self.choice3.setChecked(False)
         if choice == 4:
             chosen = self.choice4.text()
-            self.choice4.setChecked(False)
-        self.nextSlide(chosen)
+        print(chosen)
+        print(List[1][0])
+
+        if chosen == List[1][0]:
+            self.nextSlide(chosen)
+        else:
+            print("try again")
 
     def nextSlide(self, chosen):
+        global numQsDone
+        numQsDone+=1
+        global numQuestions
+        global List
         List = createProblem()
         choices = List[1]
         random.shuffle(choices)
+        print(choices)
         self.inputChoice(Dialog, 1, choices[0])
         self.inputChoice(Dialog, 2, choices[1])
         self.inputChoice(Dialog, 3, choices[2])
         self.inputChoice(Dialog, 4, choices[3])
         self.inputChoice(Dialog, 5, List[0][0])
 
+        self.choice1.setChecked(False)
+        self.choice2.setChecked(False)
+        self.choice3.setChecked(False)    
+        self.choice4.setChecked(False)
+        if numQuestions == numQsDone:
+            sys.exit()
+
+
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.choice2.setText(_translate("Dialog", "Choice 2"))
         self.choice4.setText(_translate("Dialog", "Choice 4"))
-        self.Instructions.setText(_translate("Dialog", "Please select a choice"))
         self.choice1.setText(_translate("Dialog", "Choice 1"))
         self.defQuestions.setText(_translate("Dialog", "Definition: "))
         self.choice3.setText(_translate("Dialog", "Choice 3"))
