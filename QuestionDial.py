@@ -58,6 +58,7 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+        self.displayQ(Dialog, "The powerhouse of the cell")
         self.choice2.stateChanged.connect(self.checkClick)
 
     def checkClick(self, Dialog):
@@ -88,6 +89,12 @@ class Ui_Dialog(object):
         if choice == 4:
             self.choice4.setText(_translate("Dialog", text))
             self.choice4.adjustSize()
+
+    def displayQ(self, Dialog, text):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.defQuestions.setText(_translate("Dialog", "Definition: " + text))
+        self.defQuestions.adjustSize()
 
 
 if __name__ == "__main__":
