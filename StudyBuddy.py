@@ -9,18 +9,42 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 #from QuestionDial import Ui_Dialog
 import time
-<<<<<<< HEAD
 import sys
 
-=======
 import random
 from scraper import convertArray
->>>>>>> Hushnud
+
+global quizlet_reader
+
+def arrayconverter(scrapeUrl):
+    global quizlet_reader
+    quizlet_reader = convertArray(scrapeUrl)
+
+def createProblem():
+    global quizlet_reader
+    randRow = quizlet_reader.sample(1)  #pull random row from csv
+    question = randRow.iat[0, 1]        #definition at random row
+    answer = randRow.iat[0, 0]          #term at random row
+
+    #pull 3 more random terms for incorrect choices
+    choice1 = quizlet_reader.sample(1).iat[0,0] 
+    choice2 = quizlet_reader.sample(1).iat[0,0]
+    choice3 = quizlet_reader.sample(1).iat[0,0]
+
+    #remove ':' from terms
+    answer = answer[:-2]
+    choice1 = choice1[:-2]
+    choice2 = choice2[:-2]
+    choice3 = choice3[:-2]
+
+    List = [[question], [answer, choice1, choice2, choice3]]
+    return List
+
 class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 800)
+        MainWindow.resize(450, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.Logo = QtWidgets.QLabel(self.centralwidget)
@@ -115,57 +139,31 @@ class Ui_MainWindow(object):
         self.lineEdit.setPlaceholderText(_translate("MainWindow", "Please enter the URL here..."))
         self.urlLabel.setText(_translate("MainWindow", "Quizlet Link"))
         self.pushButton.setText(_translate("MainWindow", "STUDY"))
-
-    def createProblem(self):
-        quizlet_reader = convertArray("https://quizlet.com/2595436/stony-brook-university-flash-cards/")
-        randRow = quizlet_reader.sample(1)  #pull random row from csv
-        question = randRow.iat[0, 1]        #definition at random row
-        answer = randRow.iat[0, 0]          #term at random row
-
-        #pull 3 more random terms for incorrect choices
-        choice1 = quizlet_reader.sample(1).iat[0,0] 
-        choice2 = quizlet_reader.sample(1).iat[0,0]
-        choice3 = quizlet_reader.sample(1).iat[0,0]
-
-        #remove ':' from terms
-        answer = answer[:-2]
-        choice1 = choice1[:-2]
-        choice2 = choice2[:-2]
-        choice3 = choice3[:-2]
-
-        List = [[question], [answer, choice1, choice2, choice3]]
-        return List
     
     def study(self):
-<<<<<<< HEAD
-        #time.sleep(5)
-        Dialog = QtWidgets.QDialog()
-        ui = Ui_Dialog()
-        ui.setupUi(Dialog)
-        ui.inputChoice(Dialog, 2, "Lick My Balls")
-        #ui.display()
-=======
-        List = self.createProblem()
+        arrayconverter(self.lineEdit.text())
+        List = createProblem()
         choices = List[1]
-        for i in range(len(choices)-1, 0, -1):
-            j = random.randint(0, i+1)
-
-            choices[i], choices[j] = choices[j], choices[i]
-        
+        random.shuffle(choices)
         time.sleep(self.TimeAmount.value())
         qUi.inputChoice(Dialog, 1, choices[0])
         qUi.inputChoice(Dialog, 2, choices[1])
         qUi.inputChoice(Dialog, 3, choices[2])
         qUi.inputChoice(Dialog, 4, choices[3])
         qUi.inputChoice(Dialog, 5, List[0][0])
->>>>>>> Hushnud
         Dialog.show()
         Dialog.exec_()
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(1000, 1000)
+        Dialog.resize(1920, 1080)
+        Dialog.setWindowFlags(
+            QtCore.Qt.Window |
+            QtCore.Qt.CustomizeWindowHint |
+            QtCore.Qt.WindowStaysOnTopHint |
+            QtCore.Qt.FramelessWindowHint
+        )
         self.choice2 = QtWidgets.QCheckBox(Dialog)
         self.choice2.setGeometry(QtCore.QRect(80, 290, 131, 31))
         font = QtGui.QFont()
@@ -201,6 +199,7 @@ class Ui_Dialog(object):
         font.setPointSize(18)
         self.defQuestions.setFont(font)
         self.defQuestions.setObjectName("defQuestions")
+        self.defQuestions.setWordWrap(True)
         self.choice3 = QtWidgets.QCheckBox(Dialog)
         self.choice3.setGeometry(QtCore.QRect(80, 370, 131, 31))
         font = QtGui.QFont()
@@ -218,16 +217,29 @@ class Ui_Dialog(object):
         self.choice4.stateChanged.connect(lambda: self.checkClick(Dialog, 4))
 
     def checkClick(self, Dialog, choice):
-        global chosen
         if choice == 1:
             chosen = self.choice1.text()
+            self.choice1.setChecked(False)
         if choice == 2:
             chosen = self.choice2.text()
+            self.choice2.setChecked(False)
         if choice == 3:
             chosen = self.choice3.text()
+            self.choice3.setChecked(False)
         if choice == 4:
             chosen = self.choice4.text()
-        
+            self.choice4.setChecked(False)
+        self.nextSlide(chosen)
+
+    def nextSlide(self, chosen):
+        List = createProblem()
+        choices = List[1]
+        random.shuffle(choices)
+        self.inputChoice(Dialog, 1, choices[0])
+        self.inputChoice(Dialog, 2, choices[1])
+        self.inputChoice(Dialog, 3, choices[2])
+        self.inputChoice(Dialog, 4, choices[3])
+        self.inputChoice(Dialog, 5, List[0][0])
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -239,7 +251,7 @@ class Ui_Dialog(object):
         self.defQuestions.setText(_translate("Dialog", "Definition: "))
         self.choice3.setText(_translate("Dialog", "Choice 3"))
 
-    def inputChoice(self, Dialog, choice, text,):
+    def inputChoice(self, Dialog, choice, text):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         if choice == 1:
@@ -268,4 +280,3 @@ if __name__ == "__main__":
     qUi.setupUi(Dialog)
     MainWindow.show()
     sys.exit(app.exec_())
-

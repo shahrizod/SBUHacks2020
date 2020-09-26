@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 import pandas as pd
+from time import sleep
 
 def convertArray(url):
     url = "https://quizlet.com/"+url.split("/",4)[3]+"/print/"
@@ -17,7 +18,10 @@ def convertArray(url):
     driver.quit()
     firstCol = soup.find_all(class_='term inner')
     secondCol = soup.find_all(class_ = 'def inner')
-
+    if len(firstCol) == 0:
+        sleep(2)
+        firstCol = soup.find_all(class_='term inner')
+        secondCol = soup.find_all(class_ = 'def inner')
     terms = []
     definitions = []
 
