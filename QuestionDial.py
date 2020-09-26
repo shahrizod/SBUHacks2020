@@ -64,14 +64,16 @@ class Ui_Dialog(object):
         self.choice4.stateChanged.connect(lambda: self.checkClick(Dialog, 4))
 
     def checkClick(self, Dialog, choice):
+        global chosen
         if choice == 1:
-            print(self.choice1.text())
+            chosen = self.choice1.text()
         if choice == 2:
-            print(self.choice2.text())
+            chosen = self.choice2.text()
         if choice == 3:
-            print(self.choice3.text())
+            chosen = self.choice3.text()
         if choice == 4:
-            print(self.choice4.text())
+            chosen = self.choice4.text()
+        
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
