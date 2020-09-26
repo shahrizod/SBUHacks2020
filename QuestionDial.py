@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(769, 550)
+        Dialog.resize(1000, 1000)
         self.choice2 = QtWidgets.QCheckBox(Dialog)
         self.choice2.setGeometry(QtCore.QRect(80, 290, 131, 31))
         font = QtGui.QFont()
@@ -58,11 +58,20 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        self.displayQ(Dialog, "The powerhouse of the cell")
-        self.choice2.stateChanged.connect(self.checkClick)
+        self.choice1.stateChanged.connect(lambda: self.checkClick(Dialog, 1))
+        self.choice2.stateChanged.connect(lambda: self.checkClick(Dialog, 2))
+        self.choice3.stateChanged.connect(lambda: self.checkClick(Dialog, 3))
+        self.choice4.stateChanged.connect(lambda: self.checkClick(Dialog, 4))
 
-    def checkClick(self, Dialog):
-        print("Correct")
+    def checkClick(self, Dialog, choice):
+        if choice == 1:
+            print(self.choice1.text())
+        if choice == 2:
+            print(self.choice2.text())
+        if choice == 3:
+            print(self.choice3.text())
+        if choice == 4:
+            print(self.choice4.text())
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -89,13 +98,9 @@ class Ui_Dialog(object):
         if choice == 4:
             self.choice4.setText(_translate("Dialog", text))
             self.choice4.adjustSize()
-
-    def displayQ(self, Dialog, text):
-        _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.defQuestions.setText(_translate("Dialog", "Definition: " + text))
-        self.defQuestions.adjustSize()
-
+        if choice == 5:
+            self.defQuestions.setText(_translate("Dialog", "Definition: " + text))
+            self.defQuestions.adjustSize()
 
 if __name__ == "__main__":
     import sys

@@ -13,7 +13,7 @@ import time
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(450, 588)
+        MainWindow.resize(800, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.Logo = QtWidgets.QLabel(self.centralwidget)
@@ -110,11 +110,12 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "STUDY"))
 
     def study(self):
-        #time.sleep(5)
-        Dialog = QtWidgets.QDialog()
-        ui = Ui_Dialog()
-        ui.setupUi(Dialog)
-        ui.inputChoice(Dialog, 2, "Lick My Balls")
+        time.sleep(self.TimeAmount.value())
+        qUi.inputChoice(Dialog, 1, "ANSWER CHOICE 1")
+        qUi.inputChoice(Dialog, 2, "ANSWER CHOICE 2")
+        qUi.inputChoice(Dialog, 3, "ANSWER CHOICE 3")
+        qUi.inputChoice(Dialog, 4, "ANSWER CHOICE 20")
+        qUi.inputChoice(Dialog, 5, "QUESTION GOES HERE")
         Dialog.show()
         Dialog.exec_()
 
@@ -125,6 +126,9 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
+    Dialog = QtWidgets.QDialog()
+    qUi = Ui_Dialog()
+    qUi.setupUi(Dialog)
     MainWindow.show()
     sys.exit(app.exec_())
 
