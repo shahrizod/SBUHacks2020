@@ -14,6 +14,8 @@ import os
 import random
 from scraper import convertArray
 
+global List
+global quizanswer
 global quizlet_reader
 global numQuestions
 global numQsDone
@@ -29,6 +31,7 @@ def numQs(numq):
 
 def createProblem():
     global quizlet_reader
+    global List
     randRow = quizlet_reader.sample(1)  #pull random row from csv
     question = randRow.iat[0, 1]        #definition at random row
     answer = randRow.iat[0, 0]          #term at random row
@@ -43,13 +46,12 @@ def createProblem():
     choice1 = choice1[:-2]
     choice2 = choice2[:-2]
     choice3 = choice3[:-2]
-
+    global quizanswer
+    quizanswer = answer
     List = [[question], [answer, choice1, choice2, choice3]]
-    print(List)
     return List
 
 class Ui_MainWindow(object):
-    global List
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(450, 600)
@@ -149,9 +151,9 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "STUDY"))
     
     def study(self):
+        global List
         arrayconverter(self.lineEdit.text())
         numQs(self.NumberQuestions.value())
-        global List
         List = createProblem()
         choices = List[1]
         random.shuffle(choices)
@@ -166,10 +168,9 @@ class Ui_MainWindow(object):
         Dialog.exec_()
 
 class Ui_Dialog(object):
-    global List
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(1920, 800)
+        Dialog.resize(1920, 1080)
         Dialog.setWindowFlags(
             QtCore.Qt.Window |
             QtCore.Qt.CustomizeWindowHint |
@@ -212,7 +213,6 @@ class Ui_Dialog(object):
         font.setPointSize(14)
         self.choice3.setFont(font)
         self.choice3.setObjectName("choice3")
-
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -230,23 +230,23 @@ class Ui_Dialog(object):
             chosen = self.choice3.text()
         if choice == 4:
             chosen = self.choice4.text()
-        print(chosen)
-        print(List[1][0])
-
-        if chosen == List[1][0]:
+        global List
+        global quizanswer
+        if chosen == quizanswer:
             self.nextSlide(chosen)
         else:
-            print("try again")
+            print("WRONG")
 
     def nextSlide(self, chosen):
-        global numQsDone
-        numQsDone+=1
-        global numQuestions
         global List
+        global numQsDone
+        global numQuestions
+        numQsDone+=1
+        if numQuestions == numQsDone:
+            sys.exit()
         List = createProblem()
         choices = List[1]
         random.shuffle(choices)
-        print(choices)
         self.inputChoice(Dialog, 1, choices[0])
         self.inputChoice(Dialog, 2, choices[1])
         self.inputChoice(Dialog, 3, choices[2])
@@ -257,8 +257,7 @@ class Ui_Dialog(object):
         self.choice2.setChecked(False)
         self.choice3.setChecked(False)    
         self.choice4.setChecked(False)
-        if numQuestions == numQsDone:
-            sys.exit()
+
 
 
     def retranslateUi(self, Dialog):
